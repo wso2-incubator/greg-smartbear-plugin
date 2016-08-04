@@ -10,9 +10,8 @@ Install the plugin via the integrated Plugin Repository available via the Plugin
 
 Build it yourself
 -----------------
-You can build the plugin locally by cloning this repository locally - make sure you have java and maven 3.X correctlyn
-
-installed - and run
+You can build the plugin locally by cloning this repository locally - make sure you have java and maven 3.X correctly
+installed and run
 
 mvn clean install 
 
@@ -21,7 +20,7 @@ Plugin Managers' "Load from File" action.
 
 Usage
 -----
-File --> New Project option will open the Create a project from description file window.Once installed the plugin the window will display an option
+File --> New Project option will open the create a project from description file window.Once installed the plugin the window will display an option
 "Import wsdl/swagger resources from WSO2 Governance Registry".
 
 By choosing the option you will be prompted for the G-reg server host name, port, username, password and tenant domain.
