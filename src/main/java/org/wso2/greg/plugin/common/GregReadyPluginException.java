@@ -18,8 +18,7 @@
 
 package org.wso2.greg.plugin.common;
 
-
-public class GregReadyPluginException extends Exception{
+public class GregReadyPluginException extends Exception {
 
     private String errorMessage;
 

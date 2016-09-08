@@ -25,10 +25,12 @@ import com.eviware.x.form.support.AForm;
  * This class is used to generate the new project window for WSO2 API Manager projects.
  */
 @AForm(name = "Create Project From WSDL/SWAGGER specifications published on WSO2 Governance Registry",
-        description = "Create Project From WSDL/SWAGGER specifications published on WSO2 Governance Registry")
+       description = "Create Project From WSDL/SWAGGER specifications published on WSO2 Governance Registry")
 public interface ProjectModel {
 
-    @AField(name = "Project Name", description = "Name of the project", type = AField.AFieldType.STRING)
+    @AField(name = "Project Name",
+            description = "Name of the project",
+            type = AField.AFieldType.STRING)
     public final static String PROJECT_NAME = "Project Name";
 
     @AField(name = "G-Reg Server HostName",
@@ -56,13 +58,16 @@ public interface ProjectModel {
             type = AField.AFieldType.STRING)
     public final static String TENANT_DOMAIN = "Tenant Domain";
 
-    @AField(description = "RESOURCETYPE", type = AField.AFieldType.RADIOGROUP, values = {"swagger", "wsdl"},
+    @AField(description = "RESOURCETYPE",
+            type = AField.AFieldType.RADIOGROUP,
+            values = { "swagger", "wsdl" },
             defaultValue = "wsdl")
     public static final String RESOURCETYPE = "Resource Type";
 
     @AField(name = "WSO2 GReg Version",
             description = "The version of the GReg that is been used",
-            type = AField.AFieldType.COMBOBOX, values = {"5.3.0"})
+            type = AField.AFieldType.COMBOBOX,
+            values = { "5.3.0" })
     public final static String PRODUCT_VERSION = "WSO2 GReg Version";
 
 }

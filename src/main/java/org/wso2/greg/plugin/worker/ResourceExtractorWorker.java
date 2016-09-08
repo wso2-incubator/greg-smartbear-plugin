@@ -49,9 +49,8 @@ public class ResourceExtractorWorker implements Worker {
     private String apiRetrievingError = null;
     private static final Log log = LogFactory.getLog(ResourceExtractorWorker.class);
 
-    public ResourceExtractorWorker(String hostName, String port, String resourceType,
-                                   String userName, char[] password, String tenantDomain,
-                                   String productVersion, String dialogMsg) {
+    public ResourceExtractorWorker(String hostName, String port, String resourceType, String userName, char[] password,
+            String tenantDomain, String productVersion, String dialogMsg) {
 
         this.waitDialog = UISupport.getDialogs().createProgressDialog(dialogMsg, 0, "", true);
         this.hostName = hostName;
@@ -63,14 +62,11 @@ public class ResourceExtractorWorker implements Worker {
         this.productVersion = productVersion;
     }
 
-    public static ResourceExtractionResult downloadResourcesList(String hostName, String port,
-                                                                 String resourceType, String userName,
-                                                                 char[] password, String tenantDomain,
-                                                                 String productVersion) {
+    public static ResourceExtractionResult downloadResourcesList(String hostName, String port, String resourceType,
+            String userName, char[] password, String tenantDomain, String productVersion) {
 
-        ResourceExtractorWorker worker = new ResourceExtractorWorker(hostName, port, resourceType,
-                userName, password, tenantDomain, productVersion,
-                HelpMessageConstants.FETCH_RESOURCES_DIALOG_MSG);
+        ResourceExtractorWorker worker = new ResourceExtractorWorker(hostName, port, resourceType, userName, password,
+                tenantDomain, productVersion, HelpMessageConstants.FETCH_RESOURCES_DIALOG_MSG);
         try {
 
             worker.waitDialog.run(worker);
@@ -83,12 +79,12 @@ public class ResourceExtractorWorker implements Worker {
         return worker.result;
     }
 
-
     @Override
     public Object construct(XProgressMonitor xProgressMonitor) {
         try {
-            result.setResourceInfos(GregManagerClient.getInstance().generateArtifactList(hostName, port,
-                    resourceType, userName, password, tenantDomain, productVersion));
+            result.setResourceInfos(GregManagerClient.getInstance()
+                    .generateArtifactList(hostName, port, resourceType, userName, password, tenantDomain,
+                            productVersion));
         } catch (Exception e) {
             log.error("Error Occurred while adding resources to dialog :", e);
             apiRetrievingError = e.getMessage();

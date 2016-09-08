@@ -23,9 +23,12 @@ import com.eviware.soapui.plugins.PluginConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-@PluginConfiguration(groupId = "org.wso2.plugins", name = "WSO2 Governance Registry Plugin", version = "1.0.0",
-        autoDetect = true, description = "Plugin that supports integration with WSO2 Governance Registry",
-        infoUrl = "")
+@PluginConfiguration(groupId = "org.wso2.plugins",
+                     name = "WSO2 Governance Registry Plugin",
+                     version = "1.0.0",
+                     autoDetect = true,
+                     description = "Plugin that supports integration with WSO2 Governance Registry",
+                     infoUrl = "")
 public class PluginConfig extends PluginAdapter {
 
     private static boolean disabled = false;

@@ -55,7 +55,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
-
 /**
  * This class is used to generate a new workspace for the WSO2 API Manager projects
  */
@@ -66,7 +65,8 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
     private static final Log log = LogFactory.getLog(WSO2GregWorkspace.class);
 
     public WSO2GregWorkspace() {
-        super("Create Project from WSO2 Governance Registry", "Creates new project from wsdl/swagger Resources on the G-reg Store");
+        super("Create Project from WSO2 Governance Registry",
+                "Creates new project from wsdl/swagger Resources on the G-reg Store");
     }
 
     public void perform(WorkspaceImpl workspace, Object params) {
@@ -79,24 +79,28 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
         dialog.getFormField(ProjectModel.GREG_HOST).addFormFieldValidator(new XFormFieldValidator() {
             public ValidationMessage[] validateField(XFormField formField) {
                 if (StringUtils.isNullOrEmpty(dialog.getValue(ProjectModel.GREG_HOST))) {
-                    return new ValidationMessage[]{
+                    return new ValidationMessage[] {
                             new ValidationMessage(HelpMessageConstants.HOST_EMPTY,
-                                    dialog.getFormField(ProjectModel.GREG_HOST))};
+                                    dialog.getFormField(ProjectModel.GREG_HOST))
+                    };
                 }
                 if (StringUtils.isNullOrEmpty(dialog.getValue(ProjectModel.PROJECT_NAME))) {
-                    return new ValidationMessage[]{
+                    return new ValidationMessage[] {
                             new ValidationMessage(HelpMessageConstants.PROJECT_NAME_VALIDATION_MSG,
-                                    dialog.getFormField(ProjectModel.PROJECT_NAME))};
+                                    dialog.getFormField(ProjectModel.PROJECT_NAME))
+                    };
                 }
                 if (StringUtils.isNullOrEmpty(dialog.getValue(ProjectModel.USER_NAME))) {
-                    return new ValidationMessage[]{
+                    return new ValidationMessage[] {
                             new ValidationMessage(HelpMessageConstants.USER_NAME_VALIDATION_MSG,
-                                    dialog.getFormField(ProjectModel.USER_NAME))};
+                                    dialog.getFormField(ProjectModel.USER_NAME))
+                    };
                 }
                 if (StringUtils.isNullOrEmpty(dialog.getValue(ProjectModel.PASSWORD))) {
-                    return new ValidationMessage[]{
+                    return new ValidationMessage[] {
                             new ValidationMessage(HelpMessageConstants.PASSWORD_VALIDATION_MSG,
-                                    dialog.getFormField(ProjectModel.PASSWORD))};
+                                    dialog.getFormField(ProjectModel.PASSWORD))
+                    };
                 }
 
                 String hostName = dialog.getValue(ProjectModel.GREG_HOST);
@@ -110,23 +114,24 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
                     log.error("Error occurred while saving profile data ", e);
                 }
 
-                listExtractionResult = ResourceExtractorWorker.downloadResourcesList(hostName, port,
-                        resourceType, dialog.getValue(ProjectModel.USER_NAME),
-                        dialog.getValue(ProjectModel.PASSWORD).toCharArray(),
-                        dialog.getValue(ProjectModel.TENANT_DOMAIN),
-                        dialog.getValue(ProjectModel.PRODUCT_VERSION));
+                listExtractionResult = ResourceExtractorWorker
+                        .downloadResourcesList(hostName, port, resourceType, dialog.getValue(ProjectModel.USER_NAME),
+                                dialog.getValue(ProjectModel.PASSWORD).toCharArray(),
+                                dialog.getValue(ProjectModel.TENANT_DOMAIN),
+                                dialog.getValue(ProjectModel.PRODUCT_VERSION));
 
                 if (StringUtils.hasContent(listExtractionResult.getError())) {
-                    return new ValidationMessage[]{new ValidationMessage(listExtractionResult.getError(),
-                            formField)};
+                    return new ValidationMessage[] {
+                            new ValidationMessage(listExtractionResult.getError(), formField)
+                    };
                 }
                 return new ValidationMessage[0];
             }
         });
 
         if (dialog.show() && listExtractionResult != null && !listExtractionResult.isCanceled()) {
-            ResourceSelectionResult selectionResult =
-                    Utils.showSelectAPIDefDialog(listExtractionResult.getResourceInfos());
+            ResourceSelectionResult selectionResult = Utils
+                    .showSelectAPIDefDialog(listExtractionResult.getResourceInfos());
             if (selectionResult == null) {
                 return;
             }
@@ -138,25 +143,24 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
                     project = workspace.createProject(dialog.getValue(ProjectModel.PROJECT_NAME), null);
                 } catch (Exception e) {
                     log.error("Error occured while creating a project", e);
-                    UISupport.showErrorMessage(String.format("Unable to create Project because of %s exception with "
-                                    + "\"%s\" message", e.getClass().getName(),
-                            e.getMessage()));
+                    UISupport.showErrorMessage(
+                            String.format("Unable to create Project because of %s exception with " + "\"%s\" message",
+                                    e.getClass().getName(), e.getMessage()));
                     return;
                 }
-                List<RestService> services =
-                        ResourceImporterWorker.importServices(selectionResult, project);
+                List<RestService> services = ResourceImporterWorker.importServices(selectionResult, project);
                 if (services != null && !services.isEmpty()) {
                     UISupport.select(services.get(0));
                 } else {
                     workspace.removeProject(project);
                 }
 
-
             }
         }
     }
 
-    private void saveLoginProfileData(String host, String port, String userName, String tenantDomain) throws GregReadyPluginException {
+    private void saveLoginProfileData(String host, String port, String userName, String tenantDomain)
+            throws GregReadyPluginException {
 
         File profileDataFile;
 
@@ -168,9 +172,8 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
             profileDataFile.delete();
         }
         try (
-            BufferedWriter out = new BufferedWriter(new FileWriter(profileDataFile));
-        )
-        {
+                BufferedWriter out = new BufferedWriter(new FileWriter(profileDataFile));
+        ) {
             profileDataFile.createNewFile();
 
             String data = ResourceConstants.URLS.HOST_NAME + ":" + host + "\n" +
@@ -197,18 +200,18 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
         if (loginPrfileSettingsFile.exists()) {
 
             try (
-                 FileInputStream fis = new FileInputStream(loginPrfileSettingsFile);
-                 BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-            ){
+                    FileInputStream fis = new FileInputStream(loginPrfileSettingsFile);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            ) {
                 String line;
 
                 while ((line = br.readLine()) != null) {
                     try {
                         profileMap.put(line.split(":")[0], line.split(":")[1]);
-                    }catch(PatternSyntaxException patEx){
-                        log.error("Pattern syntax error in setting profile data"+line,patEx);
-                    }catch (ArrayIndexOutOfBoundsException arrEx){
-                        log.error("Array Indexout of bound Ex error in setting profile data"+line,arrEx);
+                    } catch (PatternSyntaxException patEx) {
+                        log.error("Pattern syntax error in setting profile data" + line, patEx);
+                    } catch (ArrayIndexOutOfBoundsException arrEx) {
+                        log.error("Array Indexout of bound Ex error in setting profile data" + line, arrEx);
                     }
                 }
 
@@ -220,8 +223,7 @@ public class WSO2GregWorkspace extends AbstractSoapUIAction<WorkspaceImpl> {
                 }
 
                 if (profileMap.containsKey(ResourceConstants.URLS.PORT)) {
-                    dialog.setValue(ProjectModel.GREG_PORT,
-                            profileMap.get(ResourceConstants.URLS.PORT).toString());
+                    dialog.setValue(ProjectModel.GREG_PORT, profileMap.get(ResourceConstants.URLS.PORT).toString());
                 }
 
                 if (profileMap.containsKey(ResourceConstants.URLS.USER_NAME)) {

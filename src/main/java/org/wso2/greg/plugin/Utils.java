@@ -53,8 +53,6 @@ import org.wso2.greg.plugin.dataObjects.ResourceInfo;
 import org.wso2.greg.plugin.dataObjects.ResourceSelectionResult;
 import org.wso2.greg.plugin.ui.ResourceModel;
 
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -67,11 +65,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 public class Utils {
 
     private static final Log log = LogFactory.getLog(Utils.class);
-
 
     /**
      * This method is used to create the Resources List UI from the given list of Resources(s).
@@ -89,7 +88,7 @@ public class Utils {
         // We create a table model here with the converted data.
         TableModel tableModel = new AbstractTableModel() {
             Object[][] data = tableData;
-            String[] columnNames = {"Name", "Version", "Provider", "Description"};
+            String[] columnNames = { "Name", "Version", "Provider", "Description" };
 
             @Override
             public int getRowCount() {
@@ -151,9 +150,10 @@ public class Utils {
             @Override
             public ValidationMessage[] validateField(XFormField xFormField) {
                 if (table.getSelectedRowCount() <= 0) {
-                    return new ValidationMessage[]{
+                    return new ValidationMessage[] {
                             new ValidationMessage(HelpMessageConstants.API_SELECTION_VALIDATION_MSG,
-                                    dialog.getFormField(ResourceModel.RESOURCE_LIST))};
+                                    dialog.getFormField(ResourceModel.RESOURCE_LIST))
+                    };
                 }
                 return new ValidationMessage[0];
             }
@@ -164,16 +164,14 @@ public class Utils {
         // We get the radio button group and add a listener there. The purpose of the listener is to 'enable',
         // 'disable' the Load test radio button group based on the selected value of this group.
         // The reason is that, there is no meaning to create a Load test without a test suite.
-        XFormRadioGroup testSuiteSelection =
-                (XFormRadioGroup) dialog.getFormField(ResourceModel.TEST_SUITE);
+        XFormRadioGroup testSuiteSelection = (XFormRadioGroup) dialog.getFormField(ResourceModel.TEST_SUITE);
         testSuiteSelection.setValue(ResourceConstants.RADIO_BUTTON_OPTIONS_NO);
         testSuiteSelection.setToolTip(HelpMessageConstants.TEST_SUITE_TOOLTIP_TEXT);
 
         testSuiteSelection.addFormFieldListener(new XFormFieldListener() {
             @Override
             public void valueChanged(XFormField xFormField, String newValue, String oldValue) {
-                XFormRadioGroup loadTestSelection =
-                        (XFormRadioGroup) dialog.getFormField(ResourceModel.LOAD_TEST);
+                XFormRadioGroup loadTestSelection = (XFormRadioGroup) dialog.getFormField(ResourceModel.LOAD_TEST);
                 if (ResourceConstants.RADIO_BUTTON_OPTIONS_YES.equals(newValue)) {
                     loadTestSelection.setEnabled(true);
                 } else if (ResourceConstants.RADIO_BUTTON_OPTIONS_NO.equals(newValue)) {
@@ -182,8 +180,7 @@ public class Utils {
             }
         });
 
-        XFormRadioGroup loadTestSelection =
-                (XFormRadioGroup) dialog.getFormField(ResourceModel.LOAD_TEST);
+        XFormRadioGroup loadTestSelection = (XFormRadioGroup) dialog.getFormField(ResourceModel.LOAD_TEST);
         loadTestSelection.setToolTip(HelpMessageConstants.LOAD_TEST_TOOLTIP_TEXT);
         loadTestSelection.setValue(ResourceConstants.RADIO_BUTTON_OPTIONS_NO);
 
@@ -195,10 +192,10 @@ public class Utils {
             }
             ResourceSelectionResult selectionResult = new ResourceSelectionResult();
             selectionResult.setResourceInfoList(selectedAPIs);
-            selectionResult.setTestSuiteSelected(ResourceConstants.RADIO_BUTTON_OPTIONS_YES.equals(testSuiteSelection
-                    .getValue()));
-            selectionResult.setLoadTestSelected(ResourceConstants.RADIO_BUTTON_OPTIONS_YES.equals(loadTestSelection
-                    .getValue()));
+            selectionResult.setTestSuiteSelected(
+                    ResourceConstants.RADIO_BUTTON_OPTIONS_YES.equals(testSuiteSelection.getValue()));
+            selectionResult.setLoadTestSelected(
+                    ResourceConstants.RADIO_BUTTON_OPTIONS_YES.equals(loadTestSelection.getValue()));
 
             return selectionResult;
         } else {
@@ -254,23 +251,22 @@ public class Utils {
             log.error(errorMsg, ex);
             throw new GregReadyPluginException(errorMsg, ex);
 
-
         } finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
         return importer.importSwagger("file://" + apiLink.getContentFilePath());
     }
 
-    public static WsdlInterface[] importSOAPServiceToProject(ResourceInfo resourceInfo,
-                                                             WsdlProject project) throws Exception {
+    public static WsdlInterface[] importSOAPServiceToProject(ResourceInfo resourceInfo, WsdlProject project)
+            throws Exception {
 
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
 
             Thread.currentThread().setContextClassLoader(Utils.class.getClassLoader());
             WsdlLoader wsdlLoader = new UrlWsdlLoader(resourceInfo.getResourceContentDocLink());
-            WsdlInterface[] wsdls = WsdlImporter.importWsdl(project, resourceInfo.getResourceContentDocLink(),
-                    null, wsdlLoader);
+            WsdlInterface[] wsdls = WsdlImporter
+                    .importWsdl(project, resourceInfo.getResourceContentDocLink(), null, wsdlLoader);
             return wsdls;
         } finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
@@ -289,7 +285,6 @@ public class Utils {
         return responseString;
     }
 
-
     private static Object[][] convertToTableData(List<ResourceInfo> apiList) {
         Object[][] convertedData = new Object[apiList.size()][4];
 
@@ -303,7 +298,6 @@ public class Utils {
         }
         return convertedData;
     }
-
 
     /**
      * Method to initialize the http client. We use only one instance of http client since there can not be concurrent

@@ -24,16 +24,22 @@ import com.eviware.x.form.support.AForm;
  * This class is used to generate the API selection UI.
  */
 @AForm(name = "Select a resource to Import",
-        description = "Please select from the list which resource(s) you want to import to the project.")
+       description = "Please select from the list which resource(s) you want to import to the project.")
 public interface ResourceModel {
-    @AField(description = "", type = AField.AFieldType.TABLE)
+    @AField(description = "",
+            type = AField.AFieldType.TABLE)
     public static final String RESOURCE_LIST = "Resource List";
 
-    @AField(description = "Generate test suite", type = AField.AFieldType.RADIOGROUP, values = {"Yes","No"},
+    @AField(description = "Generate test suite",
+            type = AField.AFieldType.RADIOGROUP,
+            values = { "Yes", "No" },
             defaultValue = "No")
     public static final String TEST_SUITE = "Generate Test Suite";
 
-    @AField(description = "Generate load test", type = AField.AFieldType.RADIOGROUP, values = {"Yes","No"},
-            defaultValue = "No", enabled = false)
+    @AField(description = "Generate load test",
+            type = AField.AFieldType.RADIOGROUP,
+            values = { "Yes", "No" },
+            defaultValue = "No",
+            enabled = false)
     public static final String LOAD_TEST = "Generate Load test";
 }

@@ -139,5 +139,4 @@ public class ActionGroups {
      */
     public static final String ASSERTION_ACTIONS = "WsdlMessageAssertionActions";
 
-
 }

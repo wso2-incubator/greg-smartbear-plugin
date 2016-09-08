@@ -37,7 +37,7 @@ public final class ResourceConstants {
     public static final String RESOURCE_TYPE_SWAGGER = "swagger";
     public static final String RESOURCE_TYPE_WSDL = "wsdl";
 
-    public class URLS{
+    public class URLS {
 
         public static final String HOST_NAME = "hostname";
         public static final String PORT = "port";
@@ -56,7 +56,5 @@ public final class ResourceConstants {
         public static final String DESCRIPTION = "description";
         public static final String ID = "id";
     }
-
-
 
 }

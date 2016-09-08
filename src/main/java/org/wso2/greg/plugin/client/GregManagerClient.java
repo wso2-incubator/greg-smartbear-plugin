@@ -39,7 +39,6 @@ import org.wso2.greg.plugin.constants.ResourceConstants;
 import org.wso2.greg.plugin.dataObjects.ResourceInfo;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +52,6 @@ public class GregManagerClient {
     private static GregManagerClient gregManagerClient;
     private static final Log log = LogFactory.getLog(GregManagerClient.class);
 
-
     public static GregManagerClient getInstance() {
         if (gregManagerClient == null) {
             gregManagerClient = new GregManagerClient();
@@ -61,23 +59,18 @@ public class GregManagerClient {
         return gregManagerClient;
     }
 
-
     /**
      * This method will generate artifact list in json format.
      * JSON objects contain information required to display artifact information in the plugin UI.
      */
-    public List<ResourceInfo> generateArtifactList(String hostName, String port, String resourceType,
-                                                   String userName, char[] password,
-                                                   String tenantDomain, String productVersion)
-            throws GregReadyPluginException {
-
+    public List<ResourceInfo> generateArtifactList(String hostName, String port, String resourceType, String userName,
+            char[] password, String tenantDomain, String productVersion) throws GregReadyPluginException {
 
         if (StringUtils.isNullOrEmpty(tenantDomain)) {
             tenantDomain = ResourceConstants.CARBON_SUPER;
         }
 
-        JSONArray resourcesArray = getRegistryResources(hostName, port, resourceType, userName,
-                password, tenantDomain);
+        JSONArray resourcesArray = getRegistryResources(hostName, port, resourceType, userName, password, tenantDomain);
 
         List<ResourceInfo> resourceInfos = new ArrayList();
 
@@ -105,11 +98,11 @@ public class GregManagerClient {
                     port + ResourceConstants.URLS.GOVERNANCE_API_URL;
 
             if (resourceType.equals(ResourceConstants.RESOURCE_TYPE_SWAGGER)) {
-                contentDocLink += ResourceConstants.URLS.RESOURCE_SWAGGERS +"/" ;
+                contentDocLink += ResourceConstants.URLS.RESOURCE_SWAGGERS + "/";
             } else {
-                contentDocLink += ResourceConstants.URLS.RESOURCES_WSDLS +"/" ;
+                contentDocLink += ResourceConstants.URLS.RESOURCES_WSDLS + "/";
             }
-            contentDocLink += resourceInfo.getArtifactId() + ResourceConstants.URLS.CONTENT_URL +"?" +
+            contentDocLink += resourceInfo.getArtifactId() + ResourceConstants.URLS.CONTENT_URL + "?" +
                     ResourceConstants.URLS.TENANT + "=" + tenantDomain;
             resourceInfo.setResourceContentDocLink(contentDocLink);
             resourceInfo.setResType(resourceType);
@@ -122,10 +115,8 @@ public class GregManagerClient {
     /**
      * This method will return all registry resources of the given tenant domain
      */
-    private JSONArray getRegistryResources(String hostName, String port, String resourceType,
-                                           String userName, char[] password, String tenantDomain)
-            throws GregReadyPluginException {
-
+    private JSONArray getRegistryResources(String hostName, String port, String resourceType, String userName,
+            char[] password, String tenantDomain) throws GregReadyPluginException {
 
         HttpEntity entity;
 
@@ -172,8 +163,7 @@ public class GregManagerClient {
         if (isError) {
             String errorMsg = errorSection[1].split(":")[1].split("}")[0].trim();
             log.info("Error occurred while getting the list of APIs " + errorMsg);
-            throw new GregReadyPluginException("Error occurred while getting the list of Artifacts " +
-                    errorMsg);
+            throw new GregReadyPluginException("Error occurred while getting the list of Artifacts " + errorMsg);
         }
 
         JSONObject jsonObject = (JSONObject) JSONValue.parse(responseString);
@@ -182,6 +172,5 @@ public class GregManagerClient {
         JSONArray resourcesArray = (JSONArray) jsonObject.get("assets");
         return resourcesArray;
     }
-
 
 }

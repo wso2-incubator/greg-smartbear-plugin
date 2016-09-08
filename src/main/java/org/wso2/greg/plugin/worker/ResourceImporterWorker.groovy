@@ -16,28 +16,24 @@
  * under the License.
 */
 
-package org.wso2.greg.plugin.worker;
+package org.wso2.greg.plugin.worker
 
 import com.eviware.soapui.config.CredentialsConfig
-import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.TestStepConfig
 import com.eviware.soapui.impl.AuthRepository.AuthEntries
-import com.eviware.soapui.impl.AuthRepository.Impl.AuthRepositoryImpl;
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.AuthRepository.Impl.AuthRepositoryImpl
+import com.eviware.soapui.impl.rest.RestMethod
+import com.eviware.soapui.impl.rest.RestRequest
+import com.eviware.soapui.impl.rest.RestResource
 import com.eviware.soapui.impl.rest.RestService
-import com.eviware.soapui.impl.wsdl.WsdlInterface
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject
-import com.eviware.soapui.impl.wsdl.WsdlTestCasePro;
-import com.eviware.soapui.impl.wsdl.WsdlTestSuite
+import com.eviware.soapui.impl.wsdl.*
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase
 import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestRequestStepFactory
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.x.dialogs.Worker;
-import com.eviware.x.dialogs.XProgressDialog;
+import com.eviware.soapui.support.StringUtils
+import com.eviware.soapui.support.UISupport
+import com.eviware.x.dialogs.Worker
+import com.eviware.x.dialogs.XProgressDialog
 import com.eviware.x.dialogs.XProgressMonitor
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
@@ -47,7 +43,6 @@ import org.wso2.greg.plugin.dataObjects.ResourceInfo
 import org.wso2.greg.plugin.dataObjects.ResourceSelectionResult
 
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 
 public class ResourceImporterWorker implements Worker {
@@ -92,7 +87,7 @@ public class ResourceImporterWorker implements Worker {
         }
         if (worker.addedRestServices != null && worker.addedRestServices.size() > 0) {
             return worker.addedRestServices;
-        } else if (worker.addedSoapServices !=null && worker.addedSoapServices.size()> 0){
+        } else if (worker.addedSoapServices != null && worker.addedSoapServices.size() > 0) {
             return worker.addedSoapServices;
         }
     }
@@ -112,21 +107,21 @@ public class ResourceImporterWorker implements Worker {
 
                 // We are importing the Resource definition from the swagger resource here.
                 // Once imported, we get an array of RestServices as the result.
-                if (apiInfo.getResType().equals(ResourceConstants.RESOURCE_TYPE_SWAGGER)){
+                if (apiInfo.getResType().equals(ResourceConstants.RESOURCE_TYPE_SWAGGER)) {
                     restServices = Utils.importResourcesProject(apiInfo, project);
                     deleteSwaggerContentFile(apiInfo.getContentFilePath());
                     isSwagger2 = checkIsSwagger2(apiInfo, isSwagger2);
 
                     if (restServices != null) {
                         if (isTestSuiteRequired) {
-                            createTestSuiteForResetServices(restServices, isSwagger2,apiInfo);
+                            createTestSuiteForResetServices(restServices, isSwagger2, apiInfo);
                         }
                     }
                     // We set the Auth Profile here.
                     setAuthProfile();
-                }else{
+                } else {
                     wsdlInterfaces = Utils.importSOAPServiceToProject(apiInfo, project);
-                    if (addedSoapServices !=null &&  isTestSuiteRequired){
+                    if (addedSoapServices != null && isTestSuiteRequired) {
                         createTestSuiteForSoapServices(wsdlInterfaces);
                     }
                 }
@@ -144,7 +139,7 @@ public class ResourceImporterWorker implements Worker {
                 addedRestServices.addAll(Arrays.asList(restServices));
             }
 
-            if (wsdlInterfaces !=null){
+            if (wsdlInterfaces != null) {
                 addedSoapServices.addAll(Arrays.asList(wsdlInterfaces));
             }
 
@@ -158,15 +153,15 @@ public class ResourceImporterWorker implements Worker {
     }
 
     private void deleteSwaggerContentFile(String filePath) {
-        try{
+        try {
             Files.delete(Paths.get(filePath));
-        }catch (IOException ioEx){
-            log.error("Error occured deleting swagger content temp file " +filePath + ioEx);
+        } catch (IOException ioEx) {
+            log.error("Error occured deleting swagger content temp file " + filePath + ioEx);
         }
     }
 
     private void createTestSuiteForResetServices(RestService[] restServices, boolean isSwagger2,
-                                                 ResourceInfo apiInfo){
+                                                 ResourceInfo apiInfo) {
 
         WsdlTestSuite testSuite;
         WsdlTestCase testCase;
@@ -174,7 +169,7 @@ public class ResourceImporterWorker implements Worker {
         for (RestService restService : restServices) {
             // We change the restServices name to the apiName/apiVersion
             restService.setName(constructServiceName(apiInfo, restService.getName(), isSwagger2));
-              //Check to see if the default test suite is there
+            //Check to see if the default test suite is there
             testSuite = project.getTestSuiteByName(restService.getName());
             if (testSuite == null) {
                 testSuite = project.addNewTestSuite(restService.getName());
@@ -183,8 +178,8 @@ public class ResourceImporterWorker implements Worker {
 
             for (RestResource resource : resources) {
                 if (testSuite != null) {
-                        testCase = testSuite.addNewTestCase(resource.getName());
-                 }
+                    testCase = testSuite.addNewTestCase(resource.getName());
+                }
                 List<RestMethod> methods = resource.getRestMethodList();
                 for (RestMethod method : methods) {
                     List<RestRequest> restRequests = method.getRequestList();
@@ -206,12 +201,12 @@ public class ResourceImporterWorker implements Worker {
                         if (isTestSuiteSelected && testCase != null) {
                             TestStepConfig testStepConfig = RestRequestStepFactory.createConfig(restRequest, restRequest.getName());
                             testCase.addTestStep(testStepConfig);
-                          //  testSuite.fireTestCaseAdded(testCase);
+                            //  testSuite.fireTestCaseAdded(testCase);
 
                         }
                     }
                 }
-              //  project.fireTestSuiteAdded(testSuite);
+                //  project.fireTestSuiteAdded(testSuite);
                 if (isLoadTestSelected) {
                     if (testCase != null) {
                         testCase.addNewLoadTest(testCase.getName());
@@ -221,7 +216,7 @@ public class ResourceImporterWorker implements Worker {
         }
     }
 
-    private void createTestSuiteForSoapServices(WsdlInterface[] wsdlInterfaces){
+    private void createTestSuiteForSoapServices(WsdlInterface[] wsdlInterfaces) {
 
         WsdlTestSuite testSuite;
         WsdlTestCasePro testCase;
@@ -240,7 +235,7 @@ public class ResourceImporterWorker implements Worker {
                     testCase = testSuite.addNewTestCase(operation.getName());
 
                     WsdlTestRequestStepFactory wsdlTestRequestStepFactory = new WsdlTestRequestStepFactory();
-                    TestStepConfig testStepConfig =  wsdlTestRequestStepFactory.createConfig(operation,operation.getName());
+                    TestStepConfig testStepConfig = wsdlTestRequestStepFactory.createConfig(operation, operation.getName());
                     testCase.addTestStep(testStepConfig);
                 }
 

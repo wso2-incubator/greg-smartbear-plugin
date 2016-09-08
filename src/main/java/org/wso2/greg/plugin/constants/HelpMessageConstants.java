@@ -30,14 +30,14 @@ public class HelpMessageConstants {
     public static final String PROJECT_NAME_VALIDATION_MSG = "Please enter project name.";
 
     // Validation message for the ResourceModel table.
-    public static final String API_SELECTION_VALIDATION_MSG = "Please select at least one Resource " +
-            "to proceed";
+    public static final String API_SELECTION_VALIDATION_MSG = "Please select at least one Resource " + "to proceed";
 
     // Tooltip texts for the radio buttons.
-    public static final String TEST_SUITE_TOOLTIP_TEXT = "Select 'Yes' if you need to generate a " +
-            "set of test suites for the selected Resources";
-    public static final String LOAD_TEST_TOOLTIP_TEXT = "Select 'Yes' if you need to generate a " +
-            "set of load tests for the selected Resources";
+    public static final String TEST_SUITE_TOOLTIP_TEXT =
+            "Select 'Yes' if you need to generate a " + "set of test suites for the selected Resources";
+
+    public static final String LOAD_TEST_TOOLTIP_TEXT =
+            "Select 'Yes' if you need to generate a " + "set of load tests for the selected Resources";
 
     public static final String NO_RESOURCES_FOUND_MSG = "Resources not found";
     public static final String FETCH_RESOURCES_DIALOG_MSG = "Getting the list of Resources";
